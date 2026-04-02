@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { buffer } from 'stream/consumers';
 
-const momgoDbUri = process.env.MONGODB_URI;
+const mongoDbUri = process.env.MONGODB_URI;
 
 declare global {
   var mongooseCache: {
@@ -16,14 +16,14 @@ if (!cached) {
 }
 
 export const connectToDatabase = async () => {
-  if(!momgoDbUri) {
+  if(!mongoDbUri) {
     throw new Error('MONGODB_URI is not defined in environment variables');
   }
   if (cached.conn) {
     return cached.conn;
   }
   if (!cached.promise) {
-    cached.promise = mongoose.connect(momgoDbUri, {bufferCommands: false})
+    cached.promise = mongoose.connect(mongoDbUri, {bufferCommands: false})
   }
 
   try {
@@ -32,5 +32,6 @@ export const connectToDatabase = async () => {
     cached.promise = null;
     throw error;
   }
-  console.log(`Connected to MongoDB: ${process.env.NODE_ENV}, URI: ${momgoDbUri}`);
+  console.log(`Connected to MongoDB: ${process.env.NODE_ENV}, URI: ${mongoDbUri}`);
+  return cached.conn;
 }

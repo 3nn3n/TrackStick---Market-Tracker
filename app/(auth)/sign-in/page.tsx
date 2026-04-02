@@ -3,10 +3,18 @@
 import FooterLink from '@/components/forms/FooterLink';
 import InputField from '@/components/forms/InputField';
 import { Button } from '@/components/ui/button';
+import { signInWithEmail } from '@/lib/actions/auth.action';
+import router from 'next/dist/shared/lib/router/router';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
 
 const SignIn = () => {
+
+  const router = useRouter();
+
   const { register,
     handleSubmit,
     control,
@@ -23,9 +31,12 @@ const SignIn = () => {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      console.log('Form Data:', data);
+      const result = await signInWithEmail(data);
+      if (result.success) router.push('/');
     } catch (error) {
-      console.error('Error submitting form:', error);
+      toast.error("Failed to sign in. Please try again.", {
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
+      });
     }
   };
 
