@@ -5,10 +5,15 @@ import FooterLink from '@/components/forms/FooterLink';
 import InputField from '@/components/forms/InputField';
 import SelectField from '@/components/forms/SelectField';
 import { Button } from '@/components/ui/button';
+import { signUpWithEmail } from '@/lib/actions/auth.action';
 import { INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from '@/lib/constants';
+import { useRouter } from 'next/dist/client/components/navigation';
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner';
 
 const SignUp = () => {
+
+  const router = useRouter();
 
   const { register,
     handleSubmit,
@@ -31,9 +36,12 @@ const SignUp = () => {
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
-      console.log('Form Data:', data);
+      const result = await signUpWithEmail(data);
+      if (result.success) router.push('/');
     } catch (error) {
-      console.error('Error submitting form:', error);
+      toast.error("Failed to create account. Please try again.", {
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
+      });
     }
   };
 
@@ -66,7 +74,7 @@ const SignUp = () => {
           error={errors.password}
           validation={{ required: "Password is required", minLength: { value: 8, message: "Password must be at least 8 characters" } }}
         />
-        
+
         <CountrySelectField
           name="country"
           label="Country"
@@ -75,37 +83,37 @@ const SignUp = () => {
           required={true}
         />
 
-        <SelectField 
-        name="investmentGoals"
-        label="Investment Goals"
-        placeholder='Select Your Investment Goal'
-        options={INVESTMENT_GOALS}
-        control={control}
-        error={errors.investmentGoals}
-        required={true}
+        <SelectField
+          name="investmentGoals"
+          label="Investment Goals"
+          placeholder='Select Your Investment Goal'
+          options={INVESTMENT_GOALS}
+          control={control}
+          error={errors.investmentGoals}
+          required={true}
         />
         <SelectField
-        name="riskTolerance"
-        label="Risk Tolerance"
-        placeholder='Select Your Risk Tolerance'
-        options={RISK_TOLERANCE_OPTIONS}
-        control={control}
-        error={errors.riskTolerance}
-        required={true}
+          name="riskTolerance"
+          label="Risk Tolerance"
+          placeholder='Select Your Risk Tolerance'
+          options={RISK_TOLERANCE_OPTIONS}
+          control={control}
+          error={errors.riskTolerance}
+          required={true}
         />
         <SelectField
-        name="preferredIndustry"
-        label="Preferred Industry"
-        placeholder='Select Your Preferred Industry'
-        options={PREFERRED_INDUSTRIES}
-        control={control}
-        error={errors.preferredIndustry}
-        required={true}
+          name="preferredIndustry"
+          label="Preferred Industry"
+          placeholder='Select Your Preferred Industry'
+          options={PREFERRED_INDUSTRIES}
+          control={control}
+          error={errors.preferredIndustry}
+          required={true}
         />
+        <Button type="submit" disabled={isSubmitting} className='yellow-btn w-full mt-5'>
+          {isSubmitting ? 'Creating Account...' : 'Start Your Investement Journey'}
+        </Button>
       </form>
-      <Button type="submit" disabled={isSubmitting} className='yellow-btn w-full mt-5'>
-        {isSubmitting ? 'Creating Account...' : 'Start Your Investement Journey'}
-      </Button>
       <FooterLink text="Already have an account?" linkText="Sign in" href="/sign-in" />
     </>
   )

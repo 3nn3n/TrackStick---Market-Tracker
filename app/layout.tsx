@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
-
+import { Toaster } from "@/components/ui/sonner"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],});
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "TrackStick - Market Tracker",
@@ -32,7 +33,10 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <main>{children}</main>
+        <Toaster />
+      </body>
     </html>
   );
 }
