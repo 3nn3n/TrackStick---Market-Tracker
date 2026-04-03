@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TrackStick Market Tracker
+
+TrackStick Market Tracker is a full-stack stock dashboard built with Next.js App Router. It combines TradingView market widgets, stock search, authentication, watchlist foundations, and AI-powered email workflows.
+
+## Features
+
+- Authentication with Better Auth (email + password)
+- Personalized onboarding profile during sign-up
+- Search modal with keyboard shortcut (Ctrl/Cmd + K)
+- TradingView-powered dashboard widgets:
+	- Market Overview
+	- Stock Heatmap
+	- Timeline/News
+	- Market Quotes
+- Stock detail pages with multiple TradingView embeds:
+	- Symbol info
+	- Advanced candle chart
+	- Baseline chart
+	- Technical analysis
+	- Company profile
+	- Financials
+- Watchlist data model in MongoDB
+- Inngest workflows for:
+	- Personalized welcome email
+	- Daily AI-generated market news summary email
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19 + TypeScript
+- Tailwind CSS 4
+- Better Auth
+- MongoDB + Mongoose
+- Inngest + Gemini
+- Nodemailer
+- shadcn/ui + Radix UI + cmdk
+
+## Project Structure
+
+- app/(auth): auth pages (sign-in, sign-up)
+- app/(root): authenticated app pages (dashboard, stock details)
+- app/api/inngest: Inngest route handlers
+- components: UI and feature components
+- database: MongoDB connection and models
+- hooks: reusable frontend hooks
+- lib/actions: server actions for auth, stocks, users, watchlist
+- lib/inngest: Inngest client, prompts, and functions
+- lib/nodemailer: mail transport and templates
+
+## Environment Variables
+
+Create a .env file in the project root and configure:
+
+- NODE_ENV
+- NEXT_PUBLIC_API_URL
+- MONGODB_URI
+- BETTER_AUTH_SECRET
+- BETTER_AUTH_URL
+- GEMINI_API_KEY
+- INNGEST_DEV
+- NODEMAILER_EMAIL
+- NODEMAILER_PASSWORD
+- NEXT_PUBLIC_FINNHUB_API_KEY
+- FINNHUB_API_KEY (optional server-side override)
+
+Notes:
+
+- FINNHUB_API_KEY is checked first in server actions. If missing, NEXT_PUBLIC_FINNHUB_API_KEY is used.
+- Do not commit real secrets to version control.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+	 npm install
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create and fill your .env file.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+	 npm run dev
 
-## Learn More
+4. Open http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+## Available Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- npm run dev: start local development server
+- npm run build: create production build
+- npm run start: run production server
+- npm run lint: run ESLint
+- npm run test:db: verify MongoDB connectivity
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Auth and Route Protection
 
-## Deploy on Vercel
+- Better Auth is configured in lib/better-auth/auth.ts.
+- Root layout checks session and redirects unauthenticated users to /sign-in.
+- Middleware excludes static and public auth routes and protects the rest of the app.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Background Workflows
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Inngest functions are served at /api/inngest and include:
+
+- sign-up-email: triggered on app/user.created
+- daily-news-summary: triggered by event and daily cron
+
+These functions fetch user context, gather market news, generate summaries with Gemini, and send emails via Nodemailer.
+
+## Deployment
+
+1. Build locally:
+
+	 npm run build
+
+2. Deploy to your preferred Next.js host (for example, Vercel).
+
+3. Set all environment variables in the deployment platform.
+
+4. Ensure /api/inngest is reachable for background events/webhooks.
+
+## Current Status
+
+- Core dashboard and auth flow are working.
+- Watchlist button currently provides local UI toggling and can be extended to persist actions server-side.
