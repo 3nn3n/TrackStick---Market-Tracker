@@ -1,30 +1,41 @@
-"use client"
-import {NavigationItems}  from "@/lib/constants"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { use } from "react"
+'use client'
 
-const NavItems = () => {
-  const pathname = usePathname();
-  const isActive = ({path}: {path: string}) => {
-    if(path === "/") return pathname === "/";
+import {NavigationItems} from "@/lib/constants";
+import Link from "next/link";
+import {usePathname} from "next/navigation";
+import SearchCommand from "@/components/SearchCommand";
 
-    return pathname.startsWith(path);
-  }
+const NavItems = ({initialStocks}: { initialStocks: StockWithWatchlistStatus[]}) => {
+    const pathname = usePathname()
 
-  return (
-    <ul className="flex flex-col sm:flex-row gap-3 sm:gap-10 font-medium">
-      {NavigationItems.map(({ href, title }) => (
-        <li key={href}>
-          <Link href={href} className={`hover:text-green-500 transition-colors ${isActive({path: href}) ? "text-green-500" : ""}`}>
-            {title}
-          </Link>
-        </li>
-      ))}
+    const isActive = (path: string) => {
+        if (path === '/') return pathname === '/';
 
-    </ul>
-  )
+        return pathname.startsWith(path);
+    }
+
+    return (
+        <ul className="flex flex-col sm:flex-row p-2 gap-3 sm:gap-10 font-medium">
+            {NavigationItems.map(({ href, label }) => {
+                if(href === '/search') return (
+                    <li key="search-trigger">
+                        <SearchCommand
+                            renderAs="text"
+                            label="Search"
+                            initialStocks={initialStocks}
+                        />
+                    </li>
+                )
+
+                return <li key={href}>
+                    <Link href={href} className={`hover:text-yellow-500 transition-colors ${
+                        isActive(href) ? 'text-gray-100' : ''
+                    }`}>
+                        {label}
+                    </Link>
+                </li>
+            })}
+        </ul>
+    )
 }
-
-
-export default NavItems;
+export default NavItems
