@@ -8,13 +8,13 @@ const Home = () => {
   const scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-"
   return (
     <div>
-      <section>
+      {/* <section>
         <TickerTapeWidget
           symbols="FOREXCOM:SPXUSD,FOREXCOM:NSXUSD,FOREXCOM:DJI,FX:EURUSD,BITSTAMP:BTCUSD,BITSTAMP:ETHUSD,CMCMARKETS:GOLD"
           height={100}
           className="mb-8 bg-gray-900 rounded-lg"
         />
-      </section>
+      </section> */}
     
     <div className='flex flex-col min-h-screen home-wrapper'>
       <section className='grid w-full gap-8 home-section'>
